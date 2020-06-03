@@ -48,13 +48,47 @@ export default class Board extends Component {
         squaresFromApp[id]=this.props.isXNext? 'X' : 'O'
         console.log("After changes", squaresFromApp);
         // this.setState({squares:squaresFromApp, isXNext:!this.props.isXNext})
-        this.props.setTheState({squares:squaresFromApp, isXNext:!this.props.isXNext, history:[...this.props.history,{squares:squaresFromApp,isXNext:!this.props.isXNext}]})
+        this.props.setTheState({squares:squaresFromApp, isXNext:!this.props.isXNext, history:[...this.props.history.slice(),{squares:squaresFromApp.slice(),isXNext:!this.props.isXNext}]})
       }
+
+
+      //post data 
+
+      postData =async()=>{
+        let data = new URLSearchParams();
+        data.append("player", this.props.userName); // key and value
+        data.append("score", 3);// duration you play the game
+        const url = `http://ftw-highscores.herokuapp.com/tictactoe-dev`;
+        console.log("I am here")
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: data.toString(),//change your object to string
+          json: true
+        });
+        this.getData();
+
+        console.log("response?", response)
+        
+      }
+
+      getData =async()=>{
+        const url = `http://ftw-highscores.herokuapp.com/tictactoe-dev`;
+        let result = await fetch(url);
+        let data= await result.json();
+        console.log("data from api", data)
+
+      }
+
+
     render() {
         let status =''
         let winner = this.calculateWinner(this.props.squares)
         if(winner){
             status=`Player ${winner} is winning ` 
+            this.postData()// gonna post data
         }else{
             status = `Next player:  ${this.props.isXNext? 'X' : 'O'}`
         }
