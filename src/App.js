@@ -93,10 +93,10 @@ componentDidMount() {
     <Board {...this.state} setTheState={this.setTheState} userName={this.state.user} ></Board>
   </div>
 ); 
-
+    }
   }
  
-}
+
 
 
 
